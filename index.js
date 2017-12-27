@@ -170,11 +170,12 @@ function hemeraRedisCache(hemera, opts, done) {
   )
 }
 
-const plugin = Hp(hemeraRedisCache, '>=3')
-plugin[Symbol.for('name')] = require('./package.json').name
-plugin[Symbol.for('options')] = {
-  payloadValidator: 'hemera-joi',
-  redis: null
-}
-plugin[Symbol.for('dependencies')] = ['hemera-joi']
-module.exports = plugin
+module.exports = Hp(hemeraRedisCache, {
+  hemera: '>=3',
+  name: require('./package.json').name,
+  dependencies: ['hemera-joi'],
+  options: {
+    payloadValidator: 'hemera-joi',
+    redis: null
+  }
+})
