@@ -9,7 +9,7 @@ const HemeraTestsuite = require('hemera-testsuite')
 
 const expect = Code.expect
 
-describe('Hemera-arango-store', function() {
+describe('Hemera-redis-cache', function() {
   let PORT = 6242
   let natsUrl = 'nats://localhost:' + PORT
   let server
@@ -20,7 +20,6 @@ describe('Hemera-arango-store', function() {
     server = HemeraTestsuite.start_server(PORT, () => {
       const nats = Nats.connect(natsUrl)
       hemera = new Hemera(nats, {
-        crashOnFatal: false,
         logLevel: 'silent'
       })
       hemera.use(HemeraJoi)
@@ -47,7 +46,7 @@ describe('Hemera-arango-store', function() {
         key: 'example',
         value: 100
       })
-      .then(resp => expect(resp).to.be.equals('OK'))
+      .then(resp => expect(resp.data).to.be.equals('OK'))
   })
 
   it('get', function() {
@@ -65,8 +64,6 @@ describe('Hemera-arango-store', function() {
           key: 'example'
         })
       })
-      .then(resp => {
-        expect(resp).to.be.equals('100')
-      })
+      .then(resp => expect(resp.data).to.be.equals('100'))
   })
 })
