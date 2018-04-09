@@ -68,6 +68,17 @@ function hemeraRedisCache(hemera, opts, done) {
   hemera.add(
     {
       topic,
+      cmd: 'keys',
+      pattern: Joi.string().required()
+    },
+    function(req, cb) {
+      client.keys(req.pattern, cb)
+    }
+  )
+
+  hemera.add(
+    {
+      topic,
       cmd: 'hmset',
       key: Joi.string().required(),
       values: Joi.any().required()
