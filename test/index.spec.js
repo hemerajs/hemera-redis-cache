@@ -2,7 +2,6 @@
 
 const Hemera = require('nats-hemera')
 const HemeraRedis = require('./../index')
-const HemeraJoi = require('hemera-joi')
 const Code = require('code')
 const Nats = require('nats')
 const HemeraTestsuite = require('hemera-testsuite')
@@ -22,7 +21,6 @@ describe('Hemera-redis-cache', function() {
       hemera = new Hemera(nats, {
         logLevel: 'silent'
       })
-      hemera.use(HemeraJoi)
       hemera.use(HemeraRedis)
       hemera.ready(function() {
         client = hemera.redis.client
