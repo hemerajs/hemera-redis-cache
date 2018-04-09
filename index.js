@@ -7,8 +7,6 @@ function hemeraRedisCache(hemera, opts, done) {
   const client = Redis.createClient(opts.redis)
   const topic = 'redis-cache'
 
-  const Joi = hemera.joi
-
   hemera.decorate('redis', {
     client
   })
@@ -16,8 +14,7 @@ function hemeraRedisCache(hemera, opts, done) {
   // Gracefully shutdown
   hemera.ext('onClose', (ctx, done) => {
     hemera.log.debug('Redis connection closed!')
-    client.quit()
-    done()
+    client.quit(done)
   })
 
   client.on('ready', function() {
@@ -42,149 +39,153 @@ function hemeraRedisCache(hemera, opts, done) {
     hemera.fatal()
   })
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'set',
-      key: Joi.string().required(),
-      value: Joi.any().required()
-    },
-    function(req, cb) {
-      client.set(req.key, req.value, cb)
-    }
-  )
+  // encapsulate payload validator only to this plugin
+  hemera.use(require('hemera-joi')).after((err, done) => {
+    const Joi = hemera.joi
+    hemera.add(
+      {
+        topic,
+        cmd: 'set',
+        key: Joi.string().required(),
+        value: Joi.any().required()
+      },
+      function(req, cb) {
+        client.set(req.key, req.value, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'get',
-      key: Joi.string().required()
-    },
-    function(req, cb) {
-      client.get(req.key, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'get',
+        key: Joi.string().required()
+      },
+      function(req, cb) {
+        client.get(req.key, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'keys',
-      pattern: Joi.string().required()
-    },
-    function(req, cb) {
-      client.keys(req.pattern, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'keys',
+        pattern: Joi.string().required()
+      },
+      function(req, cb) {
+        client.keys(req.pattern, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'hmset',
-      key: Joi.string().required(),
-      values: Joi.any().required()
-    },
-    function(req, cb) {
-      client.hmset(req.key, req.values, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'hmset',
+        key: Joi.string().required(),
+        values: Joi.any().required()
+      },
+      function(req, cb) {
+        client.hmset(req.key, req.values, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'hget',
-      key: Joi.string().required(),
-      values: Joi.any().required()
-    },
-    function(req, cb) {
-      client.hget(req.key, req.values, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'hget',
+        key: Joi.string().required(),
+        values: Joi.any().required()
+      },
+      function(req, cb) {
+        client.hget(req.key, req.values, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'hgetall',
-      key: Joi.string().required()
-    },
-    function(req, cb) {
-      client.hgetall(req.key, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'hgetall',
+        key: Joi.string().required()
+      },
+      function(req, cb) {
+        client.hgetall(req.key, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'expire',
-      key: Joi.string().required(),
-      ttlSeconds: Joi.number().required()
-    },
-    function(req, cb) {
-      client.expire(req.key, req.ttlSeconds, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'expire',
+        key: Joi.string().required(),
+        ttlSeconds: Joi.number().required()
+      },
+      function(req, cb) {
+        client.expire(req.key, req.ttlSeconds, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'exists',
-      key: Joi.string().required()
-    },
-    function(req, cb) {
-      client.exists(req.key, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'exists',
+        key: Joi.string().required()
+      },
+      function(req, cb) {
+        client.exists(req.key, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'ttl',
-      key: Joi.string().required()
-    },
-    function(req, cb) {
-      client.ttl(req.key, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'ttl',
+        key: Joi.string().required()
+      },
+      function(req, cb) {
+        client.ttl(req.key, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'del',
-      key: Joi.string().required()
-    },
-    function(req, cb) {
-      client.del(req.key, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'del',
+        key: Joi.string().required()
+      },
+      function(req, cb) {
+        client.del(req.key, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'lpush',
-      key: Joi.string().required(),
-      values: Joi.any().required()
-    },
-    function(req, cb) {
-      client.lpush(req.key, req.values, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'lpush',
+        key: Joi.string().required(),
+        values: Joi.any().required()
+      },
+      function(req, cb) {
+        client.lpush(req.key, req.values, cb)
+      }
+    )
 
-  hemera.add(
-    {
-      topic,
-      cmd: 'rpush',
-      key: Joi.string().required(),
-      values: Joi.any().required()
-    },
-    function(req, cb) {
-      client.rpush(req.key, req.values, cb)
-    }
-  )
+    hemera.add(
+      {
+        topic,
+        cmd: 'rpush',
+        key: Joi.string().required(),
+        values: Joi.any().required()
+      },
+      function(req, cb) {
+        client.rpush(req.key, req.values, cb)
+      }
+    )
+    done(err)
+  })
 }
 
 module.exports = Hp(hemeraRedisCache, {
-  hemera: '>=5.0.0-rc.1',
+  hemera: '>=5.0.0',
   name: require('./package.json').name,
-  dependencies: ['hemera-joi'],
   options: {
     redis: null
   }
