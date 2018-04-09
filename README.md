@@ -17,7 +17,6 @@ const hemera = new Hemera(nats, {
   logLevel: 'info'
 })
 
-hemera.use(HemeraJoi)
 hemera.use(HemeraRedisCache)
 ```
 
