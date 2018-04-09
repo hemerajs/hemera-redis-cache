@@ -41,13 +41,13 @@ describe('Hemera-redis-cache', function() {
   describe('SET operation', () => {
     it('set', function() {
       return hemera
-          .act({
-            topic: 'redis-cache',
-            cmd: 'set',
-            key: 'example',
-            value: 100
-          })
-          .then(resp => expect(resp.data).to.be.equals('OK'))
+        .act({
+          topic: 'redis-cache',
+          cmd: 'set',
+          key: 'example',
+          value: 100
+        })
+        .then(resp => expect(resp.data).to.be.equals('OK'))
     })
 
     after(function(done) {
@@ -89,13 +89,12 @@ describe('Hemera-redis-cache', function() {
           value: 100
         })
         .then(() => {
-          hemera
-            .act({
-              topic: 'redis-cache',
-              cmd: 'set',
-              key: 'example2',
-              value: 200
-            })
+          hemera.act({
+            topic: 'redis-cache',
+            cmd: 'set',
+            key: 'example2',
+            value: 200
+          })
         })
         .then(() => {
           return hemera.act({
@@ -104,7 +103,9 @@ describe('Hemera-redis-cache', function() {
             pattern: 'examp*'
           })
         })
-        .then(resp => expect(resp.data.sort()).to.be.equals(['example', 'example2']))
+        .then(resp =>
+          expect(resp.data.sort()).to.be.equals(['example', 'example2'])
+        )
     })
 
     after(function(done) {
