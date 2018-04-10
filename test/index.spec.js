@@ -1,6 +1,7 @@
 'use strict'
 
 const Hemera = require('nats-hemera')
+const HemeraJoi = require('hemera-joi')
 const HemeraRedis = require('./../index')
 const Code = require('code')
 const Nats = require('nats')
@@ -21,6 +22,7 @@ describe('Hemera-redis-cache', function() {
       hemera = new Hemera(nats, {
         logLevel: 'silent'
       })
+      hemera.use(HemeraJoi)
       hemera.use(HemeraRedis)
       hemera.ready(function() {
         client = hemera.redis.client

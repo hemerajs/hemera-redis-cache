@@ -8,16 +8,9 @@ This is a plugin to use [Redis](https://redis.io/) as caching layer with Hemera.
 #### Example
 
 ```js
-const Hemera = require('nats-hemera')
-const HemeraJoi = require('hemera-joi')
-const nats = require('nats').connect()
-const HemeraRedisCache = require('hemera-redis-cache')
-
-const hemera = new Hemera(nats, {
-  logLevel: 'info'
-})
-
-hemera.use(HemeraRedisCache)
+const hemera = new Hemera(nats)
+hemera.use(require('hemera-joi'))
+hemera.use(require('hemera-redis-cache'))
 ```
 
 ## Run Redis
