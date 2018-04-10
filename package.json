@@ -1,6 +1,6 @@
 {
   "name": "hemera-redis-cache",
-  "version": "4.1.1",
+  "version": "5.0.0",
   "description": "This is a plugin to use Redis with Hemera",
   "main": "index.js",
   "repository": {
